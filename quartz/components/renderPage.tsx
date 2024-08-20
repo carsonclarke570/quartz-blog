@@ -237,9 +237,16 @@ export function renderPage(
                 </div>
               </div>
               <Content {...componentData} />
+              <hr />
               {componentData.fileData.filePath?.startsWith("content/index") && (
                 <BlogFeed {...componentData} />
               )}
+              <hr />
+              <div class="page-footer">
+                {afterBody.map((BodyComponent) => (
+                  <BodyComponent {...componentData} />
+                ))}
+              </div>
             </div>
             {RightComponent}
           </Body>
