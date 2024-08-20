@@ -1,30 +1,44 @@
-// @ts-ignore: typescript doesn't know about our inline bundling system
-// so we need to silence the error
+import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } from "./types"
+import { classNames } from "../util/lang"
+// @ts-ignore
 import script from "./scripts/comments.inline"
-import { QuartzComponentConstructor } from "./types"
 
-export default (() => {
-    function Footer() {
+type Options = {
+    provider: "giscus"
+    options: {
+        repo: `${string}/${string}`
+        repoId: string
+        category: string
+        categoryId: string
+        mapping?: "url" | "title" | "og:title" | "specific" | "number" | "pathname"
+        strict?: boolean
+        reactionsEnabled?: boolean
+        inputPosition?: "top" | "bottom"
+    }
+}
+
+function boolToStringBool(b: boolean): string {
+    return b ? "1" : "0"
+}
+
+export default ((opts: Options) => {
+    const Comments: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
         return (
-            <script src="https://giscus.app/client.js"
-                data-repo="carsonclarke570/quartz-blog"
-                data-repo-id="R_kgDOMIfdqw"
-                data-category="Blog"
-                data-category-id="DIC_kwDOMIfdq84CgCqR"
-                data-mapping="pathname"
-                data-strict="0"
-                data-reactions-enabled="1"
-                data-emit-metadata="0"
-                data-input-position="bottom"
-                data-theme="dark"
-                data-lang="en"
-                crossorigin="anonymous"
-                async>
-            </script>
+            <div
+                class={classNames(displayClass, "giscus")}
+                data-repo={opts.options.repo}
+                data-repo-id={opts.options.repoId}
+                data-category={opts.options.category}
+                data-category-id={opts.options.categoryId}
+                data-mapping={opts.options.mapping ?? "url"}
+                data-strict={boolToStringBool(opts.options.strict ?? true)}
+                data-reactions-enabled={boolToStringBool(opts.options.reactionsEnabled ?? true)}
+                data-input-position={opts.options.inputPosition ?? "bottom"}
+            ></div>
         )
     }
 
-    Footer.beforeDOMLoaded = script
+    Comments.afterDOMLoaded = script
 
-    return Footer
-}) satisfies QuartzComponentConstructor
+    return Comments
+}) satisfies QuartzComponentConstructor<Options>

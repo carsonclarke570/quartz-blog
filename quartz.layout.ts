@@ -5,7 +5,21 @@ import * as Component from "./quartz/components"
 export const sharedPageComponents: SharedLayout = {
   head: Component.Head(),
   header: [],
-  afterBody: [],
+  afterBody: [
+    Component.Comments({
+      provider: 'giscus',
+      options: {
+        // from data-repo
+        repo: 'carsonclarke570/quartz-blog',
+        // from data-repo-id
+        repoId: 'R_kgDOMIfdqw',
+        // from data-category
+        category: 'Blog',
+        // from data-category-id
+        categoryId: 'DIC_kwDOMIfdq84CgCqR',
+      }
+    })
+  ],
   footer: Component.Footer({
     links: {
       GitHub: "https://github.com/carsonclarke570",
@@ -21,7 +35,6 @@ export const defaultContentPageLayout: PageLayout = {
     Component.ContentMeta(),
     Component.TagList(),
     Component.RecentBlog(),
-    Component.Comments(),
   ],
   left: [
     Component.PageTitle(),
