@@ -1,5 +1,6 @@
 ---
 title: Noise
+publishDate: 2024-06-01
 ---
 
 Noise refers to a lot of things in the engineering world that are are tangentially related. 
