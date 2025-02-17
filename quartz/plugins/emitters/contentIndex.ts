@@ -18,6 +18,7 @@ export type ContentDetails = {
   richContent?: string
   date?: Date
   description?: string
+  imagePath?: string
 }
 
 interface Options {
@@ -51,13 +52,22 @@ function generateSiteMap(cfg: GlobalConfiguration, idx: ContentIndex): string {
 function generateRSSFeed(cfg: GlobalConfiguration, idx: ContentIndex, limit?: number): string {
   const base = cfg.baseUrl ?? ""
 
-  const createURLEntry = (slug: SimpleSlug, content: ContentDetails): string => `<item>
-    <title>${escapeHTML(content.title)}</title>
-    <link>https://${joinSegments(base, encodeURI(slug))}</link>
-    <guid>https://${joinSegments(base, encodeURI(slug))}</guid>
-    <description>${content.richContent ?? content.description}</description>
-    <pubDate>${content.date?.toUTCString()}</pubDate>
-  </item>`
+  const createURLEntry = (slug: SimpleSlug, content: ContentDetails): string => {
+    return (
+      `<item>
+        <title>${escapeHTML(content.title)}</title>
+        <link>https://${joinSegments(base, encodeURI(slug))}</link>
+        <guid>https://${joinSegments(base, encodeURI(slug))}</guid>
+        <description>${content.richContent ?? content.description}</description>
+        <pubDate>${content.date?.toUTCString()}</pubDate>
+        <content:encoded>
+          <![CDATA[{ 
+            "previewImg": "${content.imagePath}"
+          }]]>
+        </content:encoded>
+      </item>`
+    )
+  }
 
   const items = Array.from(idx)
     .sort(([_, f1], [__, f2]) => {
@@ -131,6 +141,7 @@ export const ContentIndex: QuartzEmitterPlugin<Partial<Options>> = (opts) => {
               : undefined,
             date: date,
             description: file.data.description ?? "",
+            imagePath: file.data.frontmatter?.previewImg
           })
         }
       }
